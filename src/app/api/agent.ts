@@ -2,13 +2,10 @@ import axios, { AxiosResponse } from "axios";
 import { history } from "../../index";
 import { IPredictionInput } from "../models/prediction-input.model";
 import { message } from "antd";
+import { config } from "process";
 
 // axios.defaults.baseURL = "http://localhost:5000/api";
 axios.defaults.baseURL = "https://salesprediction.el.r.appspot.com/api";
-axios.defaults.headers = {
-  "x-auth-token": localStorage.getItem("x-auth-token"),
-  "x-ftw-context": localStorage.getItem("x-ftw-context"),
-};
 
 axios.interceptors.response.use(undefined, (error) => {
   if (error.response.status === 404) {
@@ -29,13 +26,33 @@ const sleep = (ms: number) => (response: AxiosResponse) =>
   );
 
 const requests = {
-  get: (url: string) => axios.get(url).then(sleep(1000)).then(responseBody),
+  get: (url: string) =>
+    axios
+      .get(url, { headers: getHeaders() })
+      .then(sleep(1000))
+      .then(responseBody),
   post: (url: string, body: {}) =>
-    axios.post(url, body).then(sleep(1000)).then(responseBody),
+    axios
+      .post(url, body, { headers: getHeaders() })
+      .then(sleep(1000))
+      .then(responseBody),
   put: (url: string, body: {}) =>
-    axios.put(url, body).then(sleep(1000)).then(responseBody),
+    axios
+      .put(url, body, { headers: getHeaders() })
+      .then(sleep(1000))
+      .then(responseBody),
   delete: (url: string) =>
-    axios.delete(url).then(sleep(1000)).then(responseBody),
+    axios
+      .delete(url, { headers: getHeaders() })
+      .then(sleep(1000))
+      .then(responseBody),
+};
+
+const getHeaders = () => {
+  return {
+    "x-auth-token": localStorage.getItem("x-auth-token"),
+    "x-ftw-context": localStorage.getItem("x-ftw-context"),
+  };
 };
 
 const AuthService = {
