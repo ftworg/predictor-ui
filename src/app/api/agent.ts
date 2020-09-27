@@ -76,6 +76,7 @@ const AssetService = {
   getCategories: () => requests.get("/categories"),
   getLastTraining: () => requests.get("/model"),
   getInactiveDates: () => requests.get("/inactive"),
+  getLiveInventory: () => requests.get("/inventory/live"),
 };
 
 const PredictionService = {
