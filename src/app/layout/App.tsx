@@ -6,8 +6,6 @@ import { LoadingComponent } from "./LoadingComponent";
 import ProtectedRoute from "../auth/ProtectedRoute";
 import AppStore from "../stores/app.store";
 import { observer } from "mobx-react-lite";
-import firebase from "firebase";
-import VerifiedUser from "../../features/VerfiedUser/VerifiedUser";
 import { message, notification, PageHeader, Layout, Typography } from "antd";
 import { SessionExpired } from "../../features/SessionExpired/SessionExpired";
 
@@ -15,39 +13,7 @@ const { Content, Footer } = Layout;
 const { Title, Text } = Typography;
 
 const App = () => {
-  const {
-    isAuthenticated,
-    setToken,
-    sendPasswordUpdate,
-    setIsVerified,
-  } = useContext(AppStore);
-
-  useEffect(() => {
-    const authListener = firebase
-      .auth()
-      .onAuthStateChanged(async (user: any) => {
-        if (user) {
-          const token = await firebase.auth().currentUser?.getIdToken();
-          setToken(token);
-          const isVerfied = await firebase.auth().currentUser?.emailVerified;
-          setIsVerified(isVerfied);
-          if (!firebase.auth().currentUser?.emailVerified) {
-            try {
-              sendPasswordUpdate();
-              message.success("Password Reset Email Sent!");
-            } catch (error) {
-              message.error(
-                "Unable to send password reset email. Please contact admin"
-              );
-            }
-          }
-        } else {
-          setToken(undefined);
-        }
-      });
-
-    return authListener;
-  }, []);
+  const { isAuthenticated } = useContext(AppStore);
 
   return (
     <React.Fragment>
@@ -74,16 +40,13 @@ const App = () => {
         <Switch>
           <Route exact path="/login" component={Login} />
           <Route exact path="/loader" component={LoadingComponent} />
-          <Route exact path="/verify" component={VerifiedUser} />
           <Route exact path="/session" component={SessionExpired} />
           <ProtectedRoute
             path="/"
             component={Home}
             isAuthenticated={() => isAuthenticated}
-            // isAuthenticated={() => isAuthenticated}
             redirectPath={"/login"}
           />{" "}
-          // redirectPath="/login"
         </Switch>
       </div>
     </React.Fragment>

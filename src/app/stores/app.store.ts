@@ -3,31 +3,17 @@ import { observable, action, runInAction, configure, computed } from "mobx";
 import { Services } from "../api/agent";
 import * as jwt from "jsonwebtoken";
 import { message } from "antd";
-import firebase from "firebase";
 
 configure({ enforceActions: "always" });
 
-var config = JSON.parse(process.env.REACT_APP_FIREBASE_AUTH_JSON ?? "");
+// var config = JSON.parse(process.env.REACT_APP_FIREBASE_AUTH_JSON ?? "");
 
 const authTokenKey = "x-auth-token";
 
 class AppStore {
   constructor() {
-    firebase.initializeApp(config);
     this.reset();
   }
-
-  @action
-  setToken = (token: string | undefined) => {
-    this.loggingIn = false;
-    if (token) {
-      localStorage.setItem(authTokenKey, token);
-      this.token = token;
-    } else {
-      localStorage.removeItem(authTokenKey);
-      this.token = null;
-    }
-  };
 
   @action
   reset = () => {
@@ -46,31 +32,6 @@ class AppStore {
     return this.token ? true : false;
   }
 
-  getVerfiedFromStorage = () => {
-    if (localStorage.getItem("Verified")) {
-      return localStorage.getItem("Verified") === "true" ? true : false;
-    }
-
-    return false;
-  };
-
-  @observable
-  isVerified = this.getVerfiedFromStorage();
-
-  @action
-  setIsVerified = (val: boolean | undefined) => {
-    if (val === undefined) {
-      val = false;
-    }
-    this.isVerified = val;
-    const strVal = val ? "true" : "false";
-    localStorage.setItem("Verified", strVal);
-  };
-
-  // get isVerifiedUser() {
-  //   return firebase.auth().currentUser?.emailVerified;
-  // }
-
   @computed
   get isAdminUser() {
     const payload = jwt.decode(this.token!);
@@ -87,15 +48,13 @@ class AppStore {
   gcpLogin = async (email: string, password: string): Promise<boolean> => {
     try {
       this.loggingIn = true;
-      await firebase.auth().signInWithEmailAndPassword(email, password);
+      const res = await Services.AuthService.login({ email, password });
       return runInAction("Login", async () => {
-        const verfi = firebase.auth().currentUser?.emailVerified;
-        this.setIsVerified(verfi);
         this.loggingIn = false;
-        const res = await Services.AuthService.login({ email, password });
         return runInAction("apilogin", () => {
           localStorage.setItem("x-ftw-context", res.context);
           localStorage.setItem("x-auth-token", res.token);
+          this.token = res.token;
           return true;
         });
       });
@@ -113,12 +72,6 @@ class AppStore {
       });
       return false;
     }
-  };
-
-  sendPasswordUpdate = () => {
-    const mail = firebase.auth().currentUser?.email;
-    console.log(mail);
-    if (mail) firebase.auth().sendPasswordResetEmail(mail);
   };
 
   // @action
@@ -154,12 +107,9 @@ class AppStore {
 
   @action
   logout = async () => {
-    await firebase.auth().signOut();
-    runInAction("Signout", () => {
-      this.token = null;
-      localStorage.removeItem(authTokenKey);
-      localStorage.removeItem("Verified");
-    });
+    this.token = null;
+    localStorage.removeItem(authTokenKey);
+    localStorage.removeItem("Verified");
   };
 }
 

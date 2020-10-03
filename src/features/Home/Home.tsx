@@ -25,19 +25,11 @@ const { confirm } = Modal;
 const { Content } = Layout;
 
 export const Home: React.FC<RouteComponentProps> = ({ history, location }) => {
-  const { logout, isAdminUser, reset: appRestore, isVerified } = useContext(
-    AppStore
-  );
+  const { logout, isAdminUser, reset: appRestore } = useContext(AppStore);
   const { reset: predictionRestore } = useContext(PredictionStore);
   const { reset: compareRestore } = useContext(CompareStore);
   const { reset: inputRestore } = useContext(InputStore);
   const { reset: dashbaordRestore } = useContext(dashboardStore);
-
-  useEffect(() => {
-    if (!isVerified) {
-      history.push("/verify");
-    }
-  }, []);
 
   const handleLogout = () => {
     confirm({
@@ -60,9 +52,17 @@ export const Home: React.FC<RouteComponentProps> = ({ history, location }) => {
     });
   };
 
+  const routeNav = (route: string) => {
+    history.push(route);
+  };
+
   return (
     <Layout>
-      <NavBar handleLogout={handleLogout} currentPath={location.pathname} />
+      <NavBar
+        routeNav={routeNav}
+        handleLogout={handleLogout}
+        currentPath={location.pathname}
+      />
       <Content style={{ margin: 16, background: "#fff", minHeight: "88vh" }}>
         <div style={{ padding: 24 }}>
           <Switch>

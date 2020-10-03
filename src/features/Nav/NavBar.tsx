@@ -1,43 +1,35 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./NavBar.css";
 import { Layout, Menu, Button, message, Tooltip, Tag } from "antd";
-import { NavLink } from "react-router-dom";
 import { Routes } from "../../app/layout/Routes";
 import { observer } from "mobx-react-lite";
 import AppStore from "../../app/stores/app.store";
 import { Services } from "../../app/api/agent";
-import { Days } from "../../app/models/days.enum";
 import dashboardStore from "../../app/stores/dashboard.store";
 import PredictionStore from "../../app/stores/prediction.store";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
   UploadOutlined,
-  LineChartOutlined,
-  MonitorOutlined ,
-  DesktopOutlined, 
+  DesktopOutlined,
   InfoCircleOutlined,
   AreaChartOutlined,
   BlockOutlined,
   FolderAddOutlined,
-} from '@ant-design/icons';
-import Home from "../Home/Home";
+} from "@ant-design/icons";
 
 const { Header } = Layout;
 
-const { Sider, Content } = Layout;
+const { Sider } = Layout;
 
 interface IProps {
   handleLogout: () => void;
   currentPath: string;
+  routeNav: (route: string) => void;
 }
 
-const NavBar: React.FC<IProps> = ({ handleLogout, currentPath }) => {
-  const { isAdminUser } = useContext(AppStore);
-  const { lastTraining, setLastTraining } = useContext(dashboardStore);
-  const { Lasttimestamp } = useContext(PredictionStore);
+const NavBar: React.FC<IProps> = ({ handleLogout, currentPath, routeNav }) => {
+  const { Lasttimestamp, setLasttimestamp } = useContext(PredictionStore);
   const [collapsed, setState] = useState(true);
 
   useEffect(() => {
@@ -50,8 +42,8 @@ const NavBar: React.FC<IProps> = ({ handleLogout, currentPath }) => {
 
   const loadModelTrainingDateTime = async () => {
     try {
-      const result = await Services.AssetService.getLastTraining();
-      setLastTraining(result);
+      const modelDetails = await Services.PredictionService.getModelDetails();
+      setLasttimestamp(modelDetails["time"]);
     } catch (error) {
       message.error("Server Error. Please try again later.");
     }
@@ -63,19 +55,11 @@ const NavBar: React.FC<IProps> = ({ handleLogout, currentPath }) => {
         <div className="logo">
           <Button onClick={toggle}>
             {collapsed ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
-          </Button> &nbsp; Predictor UI
+          </Button>{" "}
+          &nbsp; Predictor UI
         </div>
 
-     
-
-        <Menu
-          mode="horizontal"
-          selectedKeys={
-            Object.keys(Routes).includes(currentPath)
-              ? [Routes[currentPath].navKey]
-              : []
-          }
-        >
+        <Menu mode="horizontal">
           <Menu.Item
             key="4"
             disabled
@@ -111,30 +95,59 @@ const NavBar: React.FC<IProps> = ({ handleLogout, currentPath }) => {
             mode="inline"
             className="menuitem"
             onSelect={toggle}
+            selectedKeys={
+              Object.keys(Routes).includes(currentPath)
+                ? [Routes[currentPath].navKey]
+                : []
+            }
           >
-            <Menu.Item key="1" icon={<DesktopOutlined/>} >
-      <NavLink to="/"  >Dashboard</NavLink>
+            <Menu.Item
+              onClick={() => routeNav("/")}
+              key="1"
+              icon={<DesktopOutlined />}
+            >
+              Dashboard
             </Menu.Item>
-            <Menu.Item key="2" icon={<AreaChartOutlined />}>
-            <NavLink to="/predict">Predict</NavLink>
+            <Menu.Item
+              onClick={() => routeNav("/predict")}
+              key="2"
+              icon={<AreaChartOutlined />}
+            >
+              Predict
             </Menu.Item>
-            <Menu.Item key="7" icon={<BlockOutlined />}>
-              <NavLink to="/compare">Compare</NavLink>
+            <Menu.Item
+              onClick={() => routeNav("/compare")}
+              key="7"
+              icon={<BlockOutlined />}
+            >
+              Compare
             </Menu.Item>
-            <Menu.Item key="3" icon={<UploadOutlined/>}>
-            <NavLink to="/upload" >Upload</NavLink>
+            <Menu.Item
+              onClick={() => routeNav("/upload")}
+              key="3"
+              icon={<UploadOutlined />}
+            >
+              Upload
             </Menu.Item>
-            <Menu.Item key="8" icon={<FolderAddOutlined/>}>
-          <NavLink to="/inventory" >Inventory</NavLink>
-        </Menu.Item>
-        <Menu.Item key="9" icon={<InfoCircleOutlined/>}>
-          <NavLink to="/manage" >Manage</NavLink>
-        </Menu.Item>
-        <Menu.Item key="5" className="right" disabled>
-          <Button type="primary" onClick={handleLogout} htmlType="submit">
-            Logout
-          </Button>
-        </Menu.Item>
+            <Menu.Item
+              onClick={() => routeNav("/inventory")}
+              key="8"
+              icon={<FolderAddOutlined />}
+            >
+              Inventory
+            </Menu.Item>
+            <Menu.Item
+              onClick={() => routeNav("/manage")}
+              key="9"
+              icon={<InfoCircleOutlined />}
+            >
+              Manage
+            </Menu.Item>
+            <Menu.Item key="5" className="right" disabled>
+              <Button type="primary" onClick={handleLogout} htmlType="submit">
+                Logout
+              </Button>
+            </Menu.Item>
           </Menu>
         </Sider>
       </Layout>

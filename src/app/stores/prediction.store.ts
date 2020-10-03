@@ -5,7 +5,7 @@ import { Line, Pie } from "@antv/g2plot";
 import { TrainingStatus } from "../models/training-status.enum";
 import { IPredictionOutput } from "../models/prediction-output.model";
 import { DashboardStatus } from "../../app/models/training-status.enum";
-import { stat } from "fs";
+// import { stat } from "fs";
 
 configure({ enforceActions: "always" });
 

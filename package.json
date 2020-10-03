@@ -21,7 +21,6 @@
     "antd": "^4.2.0",
     "axios": "^0.19.2",
     "downloadjs": "^1.4.7",
-    "firebase": "^7.15.1",
     "form-data": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "mobx": "^5.15.4",
@@ -34,8 +33,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "serve": "^11.3.1",
-    "typescript": "^3.7.5",
-    "simple-encryptor": "^4.0.0"
+    "simple-encryptor": "^4.0.0",
+    "typescript": "^3.7.5"
   },
   "scripts": {
     "start": "serve -s build",

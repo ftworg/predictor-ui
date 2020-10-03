@@ -86,12 +86,12 @@ export const UploadButtons = () => {
     try {
       const result = await Services.UploadService.allowUpload();
       // console.log(result);
-      var nextDate = String(result.nextUpload);
-      var timestamp = result.lastTrainingDetails["stages"][0]["time"];
+      let nextDate = String(result.nextUpload);
+      let timestamp = result.lastTrainingDetails["stages"][0]["time"];
       settimeStarted(
         new Date(timestamp * 1000).toISOString().slice(0, 19).replace("T", " ")
       );
-      var nextDatepara = nextDate.split("/");
+      let nextDatepara = nextDate.split("/");
       setnextDateparameter(
         String(
           nextDatepara[2] +
@@ -110,7 +110,7 @@ export const UploadButtons = () => {
           setStarted(DashboardStatus.Incomplete);
         else {
           setStarted(DashboardStatus.Complete);
-          var timestamp = result.lastTrainingDetails["stages"][0]["time"];
+          let timestamp = result.lastTrainingDetails["stages"][0]["time"];
           settimeStarted(
             new Date(timestamp * 1000)
               .toISOString()
@@ -122,7 +122,7 @@ export const UploadButtons = () => {
           setPipelineInitiated(DashboardStatus.Incomplete);
         else {
           setPipelineInitiated(DashboardStatus.Complete);
-          var timestamp = result.lastTrainingDetails["stages"][1]["time"];
+          let timestamp = result.lastTrainingDetails["stages"][1]["time"];
           settimePipelineInitiated(
             new Date(timestamp * 1000)
               .toISOString()
@@ -135,7 +135,7 @@ export const UploadButtons = () => {
           setTrainingStarted(DashboardStatus.Incomplete);
         else {
           setTrainingStarted(DashboardStatus.Complete);
-          var timestamp = result.lastTrainingDetails["stages"][2]["time"];
+          let timestamp = result.lastTrainingDetails["stages"][2]["time"];
           settimeTrainingStarted(
             new Date(timestamp * 1000)
               .toISOString()
@@ -148,7 +148,7 @@ export const UploadButtons = () => {
           setTrainingComplete(DashboardStatus.Incomplete);
         else {
           setTrainingComplete(DashboardStatus.Complete);
-          var timestamp = result.lastTrainingDetails["stages"][3]["time"];
+          let timestamp = result.lastTrainingDetails["stages"][3]["time"];
           settimeTrainingComplete(
             new Date(timestamp * 1000)
               .toISOString()
@@ -161,7 +161,7 @@ export const UploadButtons = () => {
           setModelsDeployed(DashboardStatus.Incomplete);
         else {
           setModelsDeployed(DashboardStatus.Complete);
-          var timestamp = result.lastTrainingDetails["stages"][4]["time"];
+          let timestamp = result.lastTrainingDetails["stages"][4]["time"];
           settimeModelsDeployed(
             new Date(timestamp * 1000)
               .toISOString()

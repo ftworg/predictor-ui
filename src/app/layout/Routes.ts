@@ -21,6 +21,6 @@ export const Routes: {
     component: LoadingComponent,
     navKey: "",
   },
-  "/inventory":{ component: Inventory, navKey:"8"},
-  "/manage":{ component: Manage, navKey:"8"},
+  "/inventory": { component: Inventory, navKey: "8" },
+  "/manage": { component: Manage, navKey: "9" },
 };
