@@ -51,6 +51,7 @@ const UserInput: React.FC<IProps> = ({ route, setCompareLoading }) => {
     setStoreCriteria,
     dateInput,
     setCategories,
+    generateCatInput,
     categories,
     predictionOutput,
   } = useContext(PredictionStore);
@@ -163,35 +164,6 @@ const UserInput: React.FC<IProps> = ({ route, setCompareLoading }) => {
     setCriteria(value);
   };
 
-  const generateCatInput = (value: string[]) => {
-    const catInput: any[] = [];
-    value.forEach((input) => {
-      const splitValues = input.split("-");
-      if (splitValues.length === 2) {
-        const subCats: any[] = [];
-        const superCat = treeData[Number.parseInt(splitValues[1])];
-        superCat.children.map((ch: any) => subCats.push(ch.title));
-        catInput.push({
-          super: superCat.title,
-          sub: subCats,
-        });
-      } else {
-        const superCat = treeData[Number.parseInt(splitValues[1])];
-        let ip: any = catInput.find((c) => c.super === superCat.title);
-        if (ip === undefined) {
-          ip = {
-            super: superCat.title,
-            sub: [],
-          };
-          catInput.push(ip);
-        }
-        ip.sub.push(superCat.children[Number.parseInt(splitValues[2])].title);
-      }
-    });
-
-    return catInput;
-  };
-
   const generateCalendarInput = (
     startDate: moment.Moment,
     endDate: moment.Moment,
@@ -270,18 +242,7 @@ const UserInput: React.FC<IProps> = ({ route, setCompareLoading }) => {
           : value.branch,
         category: generateCatInput(
           categoriesSelectAll
-            ? [
-                "0-0",
-                "0-1",
-                "0-2",
-                "0-3",
-                "0-4",
-                "0-5",
-                "0-6",
-                "0-7",
-                "0-8",
-                "0-9",
-              ]
+            ? treeData.map((cat: any) => cat.key)
             : value.categories
         ),
         years: generateCalendarInput(
