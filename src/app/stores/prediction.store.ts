@@ -164,6 +164,35 @@ class PredictionStore {
   @observable
   modelVersion = undefined;
 
+  generateCatInput = (value: string[]) => {
+    const catInput: any[] = [];
+    value.forEach((input) => {
+      const splitValues = input.split("-");
+      if (splitValues.length === 2) {
+        const subCats: any[] = [];
+        const superCat = this.treeData[Number.parseInt(splitValues[1])];
+        superCat.children.map((ch: any) => subCats.push(ch.title));
+        catInput.push({
+          super: superCat.title,
+          sub: subCats,
+        });
+      } else {
+        const superCat = this.treeData[Number.parseInt(splitValues[1])];
+        let ip: any = catInput.find((c) => c.super === superCat.title);
+        if (ip === undefined) {
+          ip = {
+            super: superCat.title,
+            sub: [],
+          };
+          catInput.push(ip);
+        }
+        ip.sub.push(superCat.children[Number.parseInt(splitValues[2])].title);
+      }
+    });
+
+    return catInput;
+  };
+
   @computed
   get lineData() {
     const lineData: { year: string; sales: number }[] = [];

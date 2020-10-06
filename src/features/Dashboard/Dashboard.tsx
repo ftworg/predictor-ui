@@ -69,6 +69,8 @@ const Dashboard: React.FC<RouteComponentProps> = ({ history }) => {
     setnextDateparameter,
     setLasttimestamp,
     setLastEntryDate,
+    setTreeData,
+    generateCatInput,
     setmodelVersion,
   } = useContext(PredictionStore);
 
@@ -86,15 +88,15 @@ const Dashboard: React.FC<RouteComponentProps> = ({ history }) => {
     let mounted = true;
 
     const getNextDayPrediction = async () => {
-      const input = {
-        criteria: 2,
-        from_dashboard: true,
-        branch: [],
-        category: [],
-        years: []
-      };
-
       try {
+        const input = {
+          from_dashboard: true,
+          criteria: 2,
+          branch: [],
+          category: [],
+          years: [],
+        };
+
         const result = await Services.PredictionService.getPrediction(input);
         var branches = result["branches"];
         var count = 1;
