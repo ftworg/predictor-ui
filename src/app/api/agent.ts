@@ -48,8 +48,8 @@ const requests = {
 
 const getHeaders = () => {
   return {
-    "x-auth-token": localStorage.getItem("x-auth-token"),
-    "x-ftw-context": localStorage.getItem("x-ftw-context"),
+    "x-auth-token": localStorage.getItem("x-auth-token") ?? "",
+    "x-ftw-context": localStorage.getItem("x-ftw-context") ?? "",
   };
 };
 
@@ -108,4 +108,5 @@ export const Services = {
   UploadService,
   ExportService,
   CompareService,
+  getHeaders
 };

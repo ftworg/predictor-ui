@@ -37,7 +37,7 @@ export const UploadButtons = () => {
     multiple: false,
     data: { replaceOption },
     action: Services.UploadService.FileUploadURL,
-    headers: { "x-auth-token": localStorage.getItem("x-auth-token") ?? "" },
+    headers: Services.getHeaders(),
     onChange(info: any) {
       const { status } = info.file;
       if (status !== "uploading") {
