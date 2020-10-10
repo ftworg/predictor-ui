@@ -33,7 +33,7 @@ export const UploadButtons = () => {
 
   const props = {
     name: "file",
-    accept: ".xls",
+    accept: ".xls,.csv",
     multiple: false,
     data: { replaceOption },
     action: Services.UploadService.FileUploadURL,
